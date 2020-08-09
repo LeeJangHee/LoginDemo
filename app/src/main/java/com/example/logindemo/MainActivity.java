@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseOpenHelper helper;
+    LoginOpenHelper helper;
     SQLiteDatabase db;
 
     Cursor cursor;
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Button signupBtn = (Button) findViewById(R.id.SignupBtn);
         Button loginBtn = (Button) findViewById(R.id.LoginBtn);
 
-        helper = new DatabaseOpenHelper(MainActivity.this);
+        helper = new LoginOpenHelper(MainActivity.this);
         db = helper.getWritableDatabase();
     }
 
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-//        //아이디를 찾는 부분
+//        //TODO: 아이디를 찾는 부분
 //        sql = "select id from" + helper.tableName + "where id = '" + str_login_id + "'";
 //        cursor = db.rawQuery(sql, null);
 //
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-//    아이디를 검색해서 거기에 맞는 비밀번호를 찾아야함
+//    //TODO: 아이디를 검색해서 거기에 맞는 비밀번호를 찾아야함
 //    void DBSearch(String id) {
 //        cursor = null;
 //

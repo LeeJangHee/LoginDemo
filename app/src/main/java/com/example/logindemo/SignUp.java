@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -55,14 +54,14 @@ public class SignUp extends AppCompatActivity {
             Toast.makeText(this, "gender 입력해주세요", Toast.LENGTH_SHORT).show();
         } else {
             //DB 저장하기;
-            contentValues.put(DatabaseOpenHelper._ID, str_id);
-            contentValues.put(DatabaseOpenHelper.PW, str_pw);
-            contentValues.put(DatabaseOpenHelper.NAME, str_name);
-            contentValues.put(DatabaseOpenHelper.AGE, str_age);
-            contentValues.put(DatabaseOpenHelper.GENDER, str_gender);
+            contentValues.put(LoginOpenHelper._ID, str_id);
+            contentValues.put(LoginOpenHelper.PW, str_pw);
+            contentValues.put(LoginOpenHelper.NAME, str_name);
+            contentValues.put(LoginOpenHelper.AGE, str_age);
+            contentValues.put(LoginOpenHelper.GENDER, str_gender);
 
-            SQLiteDatabase db = DatabaseOpenHelper.getInstance(this).getWritableDatabase();
-            long newRowID = db.insert(DatabaseOpenHelper.tableName, null, contentValues);
+            SQLiteDatabase db = LoginOpenHelper.getInstance(this).getWritableDatabase();
+            long newRowID = db.insert(LoginOpenHelper.tableName, null, contentValues);
 
             if (newRowID == -1) {
                 Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show();

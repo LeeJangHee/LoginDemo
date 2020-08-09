@@ -1,14 +1,13 @@
 package com.example.logindemo;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-public class DatabaseOpenHelper extends SQLiteOpenHelper {
-    private static DatabaseOpenHelper sInstaces;
+public class LoginOpenHelper extends SQLiteOpenHelper {
+    private static LoginOpenHelper sInstaces;
 
     public static final String tableName = "Users";
     public static final String _ID = "id";
@@ -24,14 +23,14 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     public static final String SQL_DELETE_ENTRIES = String.format("DROP TABLE IF EXISTS %s", tableName);
 
-    public static DatabaseOpenHelper getInstance(Context context) {
+    public static LoginOpenHelper getInstance(Context context) {
         if (sInstaces == null) {
-            sInstaces = new DatabaseOpenHelper(context);
+            sInstaces = new LoginOpenHelper(context);
         }
         return sInstaces;
     }
 
-    public DatabaseOpenHelper(@Nullable Context context) {
+    public LoginOpenHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
@@ -43,6 +42,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
     }
 
 }
