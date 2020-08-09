@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,20 +44,35 @@ public class MainActivity extends AppCompatActivity {
         //Password값 변수에 저장
         String str_login_pw = edt_Ps.getText().toString();
 
+        String[] userInfo = {
+                LoginOpenHelper._ID,
+                LoginOpenHelper.PW,
+                LoginOpenHelper.NAME,
+                LoginOpenHelper.AGE,
+                LoginOpenHelper.GENDER};
+        cursor = db.query(LoginOpenHelper.tableName, userInfo,
+                null, null, null, null, null);
+
+
         //아이디와 비밀번호가 입력 안되어있을 때
         if (str_login_id.length() == 0 || str_login_pw.length() == 0) {
             Toast.makeText(this, "아이디와 패스워드를 입력하세요", Toast.LENGTH_SHORT).show();
             return;
         }
 
-//        //TODO: 아이디를 찾는 부분
-//        sql = "select id from" + helper.tableName + "where id = '" + str_login_id + "'";
-//        cursor = db.rawQuery(sql, null);
-//
-//        if (cursor.getCount() != 0) {
-//            //존재하지 않는 아이디
-//            Toast.makeText(this, "존재하지 않는 아이디입니다.", Toast.LENGTH_SHORT).show();
-//        }
+        //TODO: 아이디를 확인
+        sql = "select id from" + helper.tableName + "where id = '" + str_login_id + "'";
+        cursor = db.rawQuery(sql, null);
+
+        if (cursor.getCount() != 0) {
+            //존재하지 않는 아이디
+            Toast.makeText(this, "존재하지 않는 아이디입니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            //존재 한다면
+            Log.d("로그인 레코드 확인", cursor.getColumnName(cursor.getPosition()));
+        }
+
+        //TODO: 비밀번호 확인
 
 
         //로그인 완료 (아직 완성 ㄴ)
@@ -71,27 +87,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-//    //TODO: 아이디를 검색해서 거기에 맞는 비밀번호를 찾아야함
-//    void DBSearch(String id) {
-//        cursor = null;
-//
-//        try {
-//            cursor = db.query(DatabaseOpenHelper.tableName,
-//                    null, "AGE" + " < ?",
-//                    new String[]{age.toString()}, null, null, "NAME");
-//
-//            if (cursor != null) {
-//                while (cursor.moveToNext()) {
-//                    String id = cursor.getString(cursor.getColumnIndex("ID"));
-//                    String name = cursor.getString(cursor.getColumnIndex("NAME"));
-//                    String age2 = cursor.getString(cursor.getColumnIndex("AGE"));
-//                    String phone = cursor.getString(cursor.getColumnIndex("PHONE"));
-//                }
-//            }
-//        } finally {
-//            if (cursor != null) {
-//                cursor.close();
-//            }
-//        }
-//    }
 }
