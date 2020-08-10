@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     LoginOpenHelper helper;
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText edt_ID;
     private EditText edt_Ps;
     private String sql;
+    private ArrayList<Login> loginInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
         helper = new LoginOpenHelper(MainActivity.this);
         db = helper.getWritableDatabase();
+        loginInfo = helper.loadLgoinList();
+
     }
 
     public void login(View v) {
@@ -44,41 +49,28 @@ public class MainActivity extends AppCompatActivity {
         //Password값 변수에 저장
         String str_login_pw = edt_Ps.getText().toString();
 
-        String[] userInfo = {
-                LoginOpenHelper._ID,
-                LoginOpenHelper.PW,
-                LoginOpenHelper.NAME,
-                LoginOpenHelper.AGE,
-                LoginOpenHelper.GENDER};
-        cursor = db.query(LoginOpenHelper.tableName, userInfo,
-                null, null, null, null, null);
-
-
         //아이디와 비밀번호가 입력 안되어있을 때
         if (str_login_id.length() == 0 || str_login_pw.length() == 0) {
             Toast.makeText(this, "아이디와 패스워드를 입력하세요", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        //TODO: 아이디를 확인
-        sql = "select id from" + helper.tableName + "where id = '" + str_login_id + "'";
-        cursor = db.rawQuery(sql, null);
-
-        if (cursor.getCount() != 0) {
-            //존재하지 않는 아이디
-            Toast.makeText(this, "존재하지 않는 아이디입니다.", Toast.LENGTH_SHORT).show();
-        } else {
-            //존재 한다면
-            Log.d("로그인 레코드 확인", cursor.getColumnName(cursor.getPosition()));
+        //로그인 하기
+        int i = 0;
+        for (i = 0; i < loginInfo.size(); i++) {
+            //로그인 완료
+            if(str_login_id.equals(loginInfo.get(i).loginId) &&
+                str_login_pw.equals(loginInfo.get(i).loginPw)) {
+                Intent it = new Intent(this, Check.class);
+                startActivity(it);
+                finish();
+                break;
+            }
         }
 
-        //TODO: 비밀번호 확인
+        if(i == loginInfo.size()) {
+            Toast.makeText(this, "아이디나 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+        }
 
-
-        //로그인 완료 (아직 완성 ㄴ)
-        Intent i = new Intent(this, Check.class);
-        startActivity(i);
-        finish();
 
     }
 

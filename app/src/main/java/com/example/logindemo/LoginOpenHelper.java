@@ -1,10 +1,13 @@
 package com.example.logindemo;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 
 public class LoginOpenHelper extends SQLiteOpenHelper {
     private static LoginOpenHelper sInstaces;
@@ -45,4 +48,34 @@ public class LoginOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public ArrayList<Login> loadLgoinList() {
+        ArrayList<Login> loginArrayList = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String[] userInfo = {
+                LoginOpenHelper._ID,
+                LoginOpenHelper.PW,
+                LoginOpenHelper.NAME,
+                LoginOpenHelper.AGE,
+                LoginOpenHelper.GENDER};
+
+        Cursor cursor = db.query(LoginOpenHelper.tableName, userInfo,
+                null, null, null, null, null);
+
+        //커서 처음~끝 조회
+        while (cursor.moveToNext()) {
+            Login login = new Login();
+            //객체에 DB 저장
+            login.loginId = cursor.getString(cursor.getColumnIndex(_ID));
+            login.loginPw = cursor.getString(cursor.getColumnIndex(PW));
+            login.loginName = cursor.getString(cursor.getColumnIndex(NAME));
+            login.loginAge = cursor.getString(cursor.getColumnIndex(AGE));
+            login.loginGender = cursor.getString(cursor.getColumnIndex(GENDER));
+
+            loginArrayList.add(login);
+        }
+
+        return loginArrayList;
+    }
 }

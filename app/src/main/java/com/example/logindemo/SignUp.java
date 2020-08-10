@@ -10,12 +10,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class SignUp extends AppCompatActivity {
+
+    private ArrayList<Login> loginArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
+        loginArrayList = new LoginOpenHelper(this).loadLgoinList();
     }
 
     public void saveLogin(View v) {
@@ -53,6 +58,11 @@ public class SignUp extends AppCompatActivity {
         } else if (str_gender.length() == 0) {
             Toast.makeText(this, "gender 입력해주세요", Toast.LENGTH_SHORT).show();
         } else {
+            //아이디 중복체크
+            if(chekId(str_id)) {
+                Toast.makeText(this, "같은 ID가 있습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             //DB 저장하기;
             contentValues.put(LoginOpenHelper._ID, str_id);
             contentValues.put(LoginOpenHelper.PW, str_pw);
@@ -73,5 +83,14 @@ public class SignUp extends AppCompatActivity {
             }
         }
 
+    }
+
+    public boolean chekId(String id) {
+        for(int i = 0; i < loginArrayList.size(); i++) {
+            if(id.equals(loginArrayList.get(i).loginId)){
+               return true;
+            }
+        }
+        return false;
     }
 }
