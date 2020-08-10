@@ -29,4 +29,11 @@ public class Check extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent itBack = new Intent(this, MainActivity.class);
+        startActivity(itBack);
+        finish();
+    }
 }

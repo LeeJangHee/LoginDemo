@@ -58,7 +58,7 @@ public class SignUp extends AppCompatActivity {
         } else if (str_gender.length() == 0) {
             Toast.makeText(this, "gender 입력해주세요", Toast.LENGTH_SHORT).show();
         } else {
-            //아이디 중복체크
+            //아이디 중복체
             if(chekId(str_id)) {
                 Toast.makeText(this, "같은 ID가 있습니다.", Toast.LENGTH_SHORT).show();
                 return;
@@ -92,5 +92,12 @@ public class SignUp extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent itBack = new Intent(this, MainActivity.class);
+        startActivity(itBack);
+        finish();
     }
 }
