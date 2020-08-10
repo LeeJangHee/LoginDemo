@@ -5,18 +5,22 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class SignUp extends AppCompatActivity {
+
+    private ArrayList<Login> loginArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
+        loginArrayList = new LoginOpenHelper(this).loadLgoinList();
     }
 
     public void saveLogin(View v) {
@@ -54,15 +58,20 @@ public class SignUp extends AppCompatActivity {
         } else if (str_gender.length() == 0) {
             Toast.makeText(this, "gender 입력해주세요", Toast.LENGTH_SHORT).show();
         } else {
+            //아이디 중복체크
+            if(chekId(str_id)) {
+                Toast.makeText(this, "같은 ID가 있습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             //DB 저장하기;
-            contentValues.put(DatabaseOpenHelper._ID, str_id);
-            contentValues.put(DatabaseOpenHelper.PW, str_pw);
-            contentValues.put(DatabaseOpenHelper.NAME, str_name);
-            contentValues.put(DatabaseOpenHelper.AGE, str_age);
-            contentValues.put(DatabaseOpenHelper.GENDER, str_gender);
+            contentValues.put(LoginOpenHelper._ID, str_id);
+            contentValues.put(LoginOpenHelper.PW, str_pw);
+            contentValues.put(LoginOpenHelper.NAME, str_name);
+            contentValues.put(LoginOpenHelper.AGE, str_age);
+            contentValues.put(LoginOpenHelper.GENDER, str_gender);
 
-            SQLiteDatabase db = DatabaseOpenHelper.getInstance(this).getWritableDatabase();
-            long newRowID = db.insert(DatabaseOpenHelper.tableName, null, contentValues);
+            SQLiteDatabase db = LoginOpenHelper.getInstance(this).getWritableDatabase();
+            long newRowID = db.insert(LoginOpenHelper.tableName, null, contentValues);
 
             if (newRowID == -1) {
                 Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show();
@@ -74,5 +83,14 @@ public class SignUp extends AppCompatActivity {
             }
         }
 
+    }
+
+    public boolean chekId(String id) {
+        for(int i = 0; i < loginArrayList.size(); i++) {
+            if(id.equals(loginArrayList.get(i).loginId)){
+               return true;
+            }
+        }
+        return false;
     }
 }

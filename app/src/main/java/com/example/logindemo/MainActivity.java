@@ -12,15 +12,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseOpenHelper helper;
+    LoginOpenHelper helper;
     SQLiteDatabase db;
 
     Cursor cursor;
     private EditText edt_ID;
     private EditText edt_Ps;
     private String sql;
+    private ArrayList<Login> loginInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
         Button signupBtn = (Button) findViewById(R.id.SignupBtn);
         Button loginBtn = (Button) findViewById(R.id.LoginBtn);
 
-        helper = new DatabaseOpenHelper(MainActivity.this);
+        helper = new LoginOpenHelper(MainActivity.this);
         db = helper.getWritableDatabase();
+        loginInfo = helper.loadLgoinList();
+
     }
 
     public void login(View v) {
@@ -49,21 +54,23 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "아이디와 패스워드를 입력하세요", Toast.LENGTH_SHORT).show();
             return;
         }
+        //로그인 하기
+        int i = 0;
+        for (i = 0; i < loginInfo.size(); i++) {
+            //로그인 완료
+            if(str_login_id.equals(loginInfo.get(i).loginId) &&
+                str_login_pw.equals(loginInfo.get(i).loginPw)) {
+                Intent it = new Intent(this, Check.class);
+                startActivity(it);
+                finish();
+                break;
+            }
+        }
 
-//        //아이디를 찾는 부분
-//        sql = "select id from" + helper.tableName + "where id = '" + str_login_id + "'";
-//        cursor = db.rawQuery(sql, null);
-//
-//        if (cursor.getCount() != 0) {
-//            //존재하지 않는 아이디
-//            Toast.makeText(this, "존재하지 않는 아이디입니다.", Toast.LENGTH_SHORT).show();
-//        }
+        if(i == loginInfo.size()) {
+            Toast.makeText(this, "아이디나 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+        }
 
-
-        //로그인 완료 (아직 완성 ㄴ)
-        Intent i = new Intent(this, Check.class);
-        startActivity(i);
-        finish();
 
     }
 
@@ -72,27 +79,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-//    아이디를 검색해서 거기에 맞는 비밀번호를 찾아야함
-//    void DBSearch(String id) {
-//        cursor = null;
-//
-//        try {
-//            cursor = db.query(DatabaseOpenHelper.tableName,
-//                    null, "AGE" + " < ?",
-//                    new String[]{age.toString()}, null, null, "NAME");
-//
-//            if (cursor != null) {
-//                while (cursor.moveToNext()) {
-//                    String id = cursor.getString(cursor.getColumnIndex("ID"));
-//                    String name = cursor.getString(cursor.getColumnIndex("NAME"));
-//                    String age2 = cursor.getString(cursor.getColumnIndex("AGE"));
-//                    String phone = cursor.getString(cursor.getColumnIndex("PHONE"));
-//                }
-//            }
-//        } finally {
-//            if (cursor != null) {
-//                cursor.close();
-//            }
-//        }
-//    }
 }
